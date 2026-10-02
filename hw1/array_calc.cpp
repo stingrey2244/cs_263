@@ -7,11 +7,11 @@ constexpr size_t SIZE = 10'000'000;
 
 void fill_random(std::vector<float>& v, std::mt19937& gen,
     std::uniform_real_distribution<float>& dist) {
-    for (auto& val : v) {
+
+  for (auto& val : v) {
         val = dist(gen);
     }
 }
-
 void sum(const std::vector<float>& v, std::vector<float>& s, int num_threads, int thread_num){
   int curr_sum = 0;
   int range = v.size()/num_threads;
@@ -29,7 +29,6 @@ int main(){
   std::vector<float> s(cores);
   
   fill_random(a, gen, dist);
-
   std::vector<std::thread> threads;
 
   for (int i = 0; i < cores; i++){
