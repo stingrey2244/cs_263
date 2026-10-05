@@ -1,0 +1,11 @@
+Code Review HW1
+For: Mavis
+By: Rey
+
+Files:
+2dstencils2.cpp		arraymin2.cpp		helloworld2.cpp		stringupper2.cpp
+arraymax2.cpp		arraysum2.cpp		piapprox2.cpp		vowelcount2.cpp
+
+1. helloworld2.cpp
+
+
