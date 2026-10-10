@@ -1,0 +1,5 @@
+September 14th episode reflection
+
+The episode first discussed ‘AI doomerism’; the hosts attended an AI data center conference , and it was noted that the biggest change to the industry within the past few years is  growing resistence on local/state/regional/national level. This resistance is only growing stronger, and warnings aren’t just coming from researchers, and regular citizens, but from the industry itself. Many are warning of an “AI doomsday”.
+
+Despite this growing concern, nothing is slowing down; AI energy usage continues to rise, record energy consumption is ecpected in 2026/27, w/ data centers a major contributer. China/US account for 80% of projected increase in energy usage. It is predicted that power availability will become a major competive advantage in the coming years.
