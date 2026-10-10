@@ -1,0 +1,51 @@
+#include <iostream>
+#include <vector>
+#include <random>
+
+const size_t SIZE = 30;
+const int SCALAR = 2;
+
+void mult(std::vector<int>& a,
+	  std::vector<int>& b, int x) {
+
+    #pragma omp parallel
+    {
+      #pragma omp for
+      for (auto i = 0; i < a.size(); i++) {
+	b[i] = x * a[i];
+      }
+    }
+}
+
+
+void fill_random(std::vector<int>& v, std::mt19937& gen,
+    std::uniform_int_distribution<int>& dist) {
+    for (auto& val : v) {
+        val = dist(gen);
+    }
+}
+
+int main() {
+  std::vector<int> a(SIZE), b(SIZE);
+
+  std::mt19937 gen(1871);
+  std::uniform_int_distribution<int> dist(-100, 100);
+
+  int x = 2;
+  
+  fill_random(a, gen, dist);
+
+  mult(a, b, SCALAR);
+    
+  std::cout << "a: ";
+  for (int n : a) {
+    std::cout << n << " ";
+  }
+  std::cout << std::endl;
+  std::cout << "(a * " << SCALAR  << "): ";
+  for (int n : b) {
+    std::cout << n << " ";
+  }
+  std::cout << std::endl;
+  return 0;
+}
