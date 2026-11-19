@@ -12,5 +12,5 @@ To compile and run cpp files:
 
 To compile and run CUDA problems:
 
-`nvcc filename.cu -o filename`
+`nvcc filename.cu -o filename`\
 `./filename`
