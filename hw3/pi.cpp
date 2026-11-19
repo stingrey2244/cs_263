@@ -1,52 +1,40 @@
 #include <iostream>
-#include <vector>
 #include <random>
-#include <thread>
-#include <mutex>
-
-int inside_count = 0;
-std::mutex mtx;
-
-void circle(int iterations, double min_x, double max_x, double min_y, double max_y) {
-  std::random_device rd; //come back to this
-  std::mt19937 gen(rd());
-
-  std::uniform_real_distribution<double> dis_x(min_x, max_x);
-  std::uniform_real_distribution<double> dis_y(min_y, max_y);
-  
-  int sum = 0;
-  
-  for (int i = 0; i < iterations; i++) {
-    double x = dis_x(gen);
-    double y = dis_y(gen);
-    
-    if ((x * x) + (y * y) <= 1.0) {
-      sum++;
-    }
-  }
-
-  mtx.lock();
-  inside_count += sum;
-  mtx.unlock();
-}
+#include <omp.h>
 
 int main(){
-  std::vector<std::thread> threads;
-  const int TOTAL_ITERATIONS = 10'000'000;
+
+  const int TOTAL_ITERATIONS = 100'000'000;
   const int NUM_THREADS = 4;
   const int ITERATIONS_PER_THREAD = TOTAL_ITERATIONS / NUM_THREADS;
+  double inside_count = 0;
+  omp_set_num_threads(4);
 
-  std::thread t1(circle, ITERATIONS_PER_THREAD, 0.0, 0.5, 0.0, 0.5);
-  std::thread t2(circle, ITERATIONS_PER_THREAD, 0.5, 1.0, 0.0, 0.5);
-  std::thread t3(circle, ITERATIONS_PER_THREAD, 0.0, 0.5, 0.5, 1.0);
-  std::thread t4(circle, ITERATIONS_PER_THREAD, 0.5, 1.0, 0.5, 1.0);
+  #pragma omp parallel
+  {
+    std::random_device rd; //come back to this                                                                                                  
+    std::mt19937 gen(rd() * omp_get_thread_num());
+    std::uniform_real_distribution<double> dis(0.0, 1.0);
 
-  t1.join();
-  t2.join();
-  t3.join();
-  t4.join();
-  
-  double pi_estimate = 4.0 * (static_cast<double>(inside_count)/TOTAL_ITERATIONS);
+    int local_sum = 0;
+
+    #pragma omp for
+    for (int i = 0; i < ITERATIONS_PER_THREAD; i++) {
+      double x = dis(gen);
+      double y = dis(gen);
+
+      if ((x * x) + (y * y) <= 1.0) {
+        local_sum++;
+      }
+    }
+
+    #pragma omp critical
+    {
+      inside_count += local_sum;
+    }
+  }
+    
+  double pi_estimate = 4.0 * (static_cast<double>(inside_count)/ITERATIONS_PER_THREAD);
 
   std::cout << "PI estimate is: " << pi_estimate << std::endl;
 }
